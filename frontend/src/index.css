@@ -1,1 +1,132 @@
 @import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKEN SYSTEM — ISC 2026 Conference
+   All tokens available as Tailwind utilities AND CSS variables
+   ============================================================ */
+
+@theme {
+  /* ── Primary ── */
+  --color-primary-dark: #0B1F3A;
+  --color-primary-blue: #1E3A8A;
+
+  /* ── Accent Buttones  ── */
+  --color-accent-cyan: #06B6D4;
+  --color-accent-hover: #0891B2;
+
+  /* ── Neutrals ── */
+  --color-white: #FFFFFF;
+  --color-bg-light: #F5F7FA;
+  --color-border: #E5E7EB;
+
+  /* ── Text ── */
+  --color-text-main: #111827;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #6B7280;
+
+  /* ── Toasts / Status ── */
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-info: #2563EB;
+}
+
+/* ── CSS custom properties (for inline styles / non-Tailwind use) ── */
+:root {
+  --primary-dark: #0B1F3A;
+  --primary-blue: #1E3A8A;
+
+  --accent-cyan: #06B6D4;
+  --accent-hover: #0891B2;
+
+  --white: #FFFFFF;
+  --bg-light: #F5F7FA;
+  --border: #E5E7EB;
+
+  --text-main: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+
+  --success: #16A34A;
+  --warning: #D97706;
+  --error: #DC2626;
+  --info: #2563EB;
+}
+
+/* ── Layout tokens ── */
+:root {
+  --layout-max-width: 1152px;   /* consistent across navbar + pages */
+  --layout-px: 2rem;            /* 32px horizontal padding */
+  --layout-px-mobile: 1.25rem; /* 20px on small screens */
+}
+
+/* ── Base resets ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Shared page/nav container ──
+   Apply to every page wrapper and the navbar inner div
+   for pixel-perfect horizontal alignment across the full app. */
+.app-container {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--layout-px);
+  padding-right: var(--layout-px);
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding-left: var(--layout-px-mobile);
+    padding-right: var(--layout-px-mobile);
+  }
+}
+
+/* ── Button utilities ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* Filled accent button — cyan bg, white text */
+.btn-primary {
+  background-color: var(--accent-cyan);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  color: #ffffff;
+}
+
+/* Outlined button — transparent bg, white text */
+.btn-outline {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}

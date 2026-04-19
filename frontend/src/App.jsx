@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Navbar from './components/ui/Navbar';
 
 // Pages
 import Home from './pages/main/Home';
@@ -15,7 +15,7 @@ import CertificateCheck from './pages/main/CertificateCheck';
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-bg-light flex flex-col">
         <Navbar />
         <div className="flex-1">
           <Routes>
@@ -40,8 +40,10 @@ function App() {
             />
           </Routes>
         </div>
-        <footer className="text-center text-xs text-gray-400 py-6 border-t border-gray-200">
-          © 2025 AdvWeb Conference. All rights reserved.
+        <footer className="text-center text-xs text-text-muted py-6 border-t border-border">
+          <div className="app-container">
+            © 2026 ISC Conference. All rights reserved.
+          </div>
         </footer>
       </div>
     </BrowserRouter>
