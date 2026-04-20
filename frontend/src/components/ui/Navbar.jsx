@@ -5,10 +5,10 @@ import ButtonSingle from './ButtonSingle';
 
 const navLinks = [
   { to: '/', label: 'Home' },
-  { to: '/committee', label: 'Themes' },
   { to: '/speakers', label: 'Speakers' },
   { to: '/program', label: 'Program' },
-  { to: '/committee', label: 'About' },
+  { to: '/committee', label: 'Committee' },
+  { to: '/about', label: 'About' },
 ];
 
 const Navbar = () => {

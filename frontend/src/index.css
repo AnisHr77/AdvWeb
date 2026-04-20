@@ -29,6 +29,9 @@
   --color-warning: #D97706;
   --color-error: #DC2626;
   --color-info: #2563EB;
+
+  /* ── Secondary Backgrounds ── */
+  --color-useful: #E9F7F8;
 }
 
 /* ── CSS custom properties (for inline styles / non-Tailwind use) ── */
@@ -51,6 +54,7 @@
   --warning: #D97706;
   --error: #DC2626;
   --info: #2563EB;
+  --useful: #E9F7F8;
 }
 
 /* ── Layout tokens ── */
