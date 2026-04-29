@@ -10,6 +10,7 @@ import IconUser from '../../components/icons/User';
 import IconBuilding from '../../components/icons/Building';
 import IconBriefcase from '../../components/icons/Briefcase';
 import IconChat from '../../components/icons/Chat';
+import { registrationAPI } from '../../services/api';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -22,12 +23,28 @@ const Register = () => {
     requirements: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError('');
+    setLoading(true);
+    try {
+      await registrationAPI.submit(form);
+      localStorage.setItem('conference_user', JSON.stringify({
+        fullName: form.fullName,
+        email: form.email,
+        type: form.type
+      }));
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -119,6 +136,12 @@ const Register = () => {
             <h2 className="text-2xl font-semibold text-[#023047] mb-2">Participant Details</h2>
             <p className="text-gray-400 text-sm mb-10">Please fill in the information below to secure your spot.</p>
 
+            {error && (
+              <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600 font-medium">
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 {/* Full Name */}
@@ -126,11 +149,9 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Full Name <span className="text-red-400">*</span></label>
                   <div className="relative group">
                     <IconUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <input
-                      type="text" name="fullName" required placeholder="Dr. Jane Doe"
+                    <input type="text" name="fullName" required placeholder="Dr. Jane Doe"
                       className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all"
-                      value={form.fullName} onChange={handleChange}
-                    />
+                      value={form.fullName} onChange={handleChange} />
                   </div>
                 </div>
 
@@ -139,11 +160,9 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Email Address <span className="text-red-400">*</span></label>
                   <div className="relative group">
                     <IconMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <input
-                      type="email" name="email" required placeholder="jane.doe@university.edu"
+                    <input type="email" name="email" required placeholder="jane.doe@university.edu"
                       className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all font-medium"
-                      value={form.email} onChange={handleChange}
-                    />
+                      value={form.email} onChange={handleChange} />
                   </div>
                 </div>
 
@@ -152,11 +171,9 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Phone Number</label>
                   <div className="relative group">
                     <IconPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <input
-                      type="text" name="phone" placeholder="+1 (555) 000-0000"
+                    <input type="text" name="phone" placeholder="+1 (555) 000-0000"
                       className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all font-medium"
-                      value={form.phone} onChange={handleChange}
-                    />
+                      value={form.phone} onChange={handleChange} />
                   </div>
                 </div>
 
@@ -165,11 +182,9 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Institution <span className="text-red-400">*</span></label>
                   <div className="relative group">
                     <IconBuilding className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <input
-                      type="text" name="institution" required placeholder="e.g., Stanford University"
+                    <input type="text" name="institution" required placeholder="e.g., Stanford University"
                       className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all font-medium"
-                      value={form.institution} onChange={handleChange}
-                    />
+                      value={form.institution} onChange={handleChange} />
                   </div>
                 </div>
 
@@ -178,15 +193,19 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Country <span className="text-red-400">*</span></label>
                   <div className="relative group">
                     <IconGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <select
-                      name="country" className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm text-[#023047] focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all appearance-none font-medium"
-                      value={form.country} onChange={handleChange}
-                    >
+                    <select name="country" className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm text-[#023047] focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all appearance-none font-medium"
+                      value={form.country} onChange={handleChange}>
                       <option disabled>Select Country</option>
                       <option>Switzerland</option>
                       <option>United States</option>
                       <option>China</option>
                       <option>United Kingdom</option>
+                      <option>France</option>
+                      <option>Germany</option>
+                      <option>Japan</option>
+                      <option>Canada</option>
+                      <option>Australia</option>
+                      <option>Other</option>
                     </select>
                   </div>
                 </div>
@@ -196,14 +215,14 @@ const Register = () => {
                   <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Type <span className="text-red-400">*</span></label>
                   <div className="relative group">
                     <IconBriefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                    <select
-                      name="type" className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm text-[#023047] focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all appearance-none font-medium"
-                      value={form.type} onChange={handleChange}
-                    >
+                    <select name="type" className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-md text-sm text-[#023047] focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all appearance-none font-medium"
+                      value={form.type} onChange={handleChange}>
                       <option disabled>Select Type</option>
                       <option>Author</option>
                       <option>Attendee</option>
                       <option>Student</option>
+                      <option>Presenter</option>
+                      <option>Full Delegate</option>
                     </select>
                   </div>
                 </div>
@@ -214,27 +233,33 @@ const Register = () => {
                 <label className="block text-[10px] font-semibold text-[#023047] uppercase tracking-widest">Special Requirements (Optional)</label>
                 <div className="relative group">
                   <IconChat className="absolute left-4 top-4 text-gray-300 group-focus-within:text-[#17A2B8] transition-colors" size={16} />
-                  <textarea
-                    name="requirements" rows="5" placeholder="Let us know if you have any dietary restrictions, accessibility needs, or other special requirements..."
+                  <textarea name="requirements" rows="5" placeholder="Let us know if you have any dietary restrictions, accessibility needs, or other special requirements..."
                     className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-md text-sm placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/10 focus:border-[#17A2B8]/20 transition-all font-medium leading-relaxed"
-                    value={form.requirements} onChange={handleChange}
-                  ></textarea>
+                    value={form.requirements} onChange={handleChange}>
+                  </textarea>
                 </div>
               </div>
 
               <div className="flex items-start gap-3.5 pt-4">
                 <input type="checkbox" className="mt-1 w-4 h-4 rounded text-[#17A2B8] border-gray-300 focus:ring-[#17A2B8]/20 transition-all cursor-pointer" required id="consent" />
                 <label htmlFor="consent" className="text-xs text-gray-400 leading-relaxed font-medium cursor-pointer">
-                  I agree to the <Link to="/terms" className="text-[#17A2B8] hover:underline">Terms & Conditions</Link> and the <Link to="/privacy" className="text-[#17A2B8] hover:underline">Privacy Policy</Link>.
+                  I agree to the <Link to="/terms" className="text-[#17A2B8] hover:underline">Terms &amp; Conditions</Link> and the <Link to="/privacy" className="text-[#17A2B8] hover:underline">Privacy Policy</Link>.
                 </label>
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-5 bg-[#17A2B8] text-white font-semibold rounded-md hover:bg-[#138496] transition-all shadow-lg shadow-[#17A2B8]/20 active:scale-[0.98] flex items-center justify-center gap-3 text-md"
-              >
-                Complete Registration
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              <button type="submit" disabled={loading}
+                className="w-full py-5 bg-[#17A2B8] text-white font-semibold rounded-md hover:bg-[#138496] transition-all shadow-lg shadow-[#17A2B8]/20 active:scale-[0.98] flex items-center justify-center gap-3 text-md disabled:opacity-70 disabled:cursor-not-allowed">
+                {loading ? (
+                  <>
+                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Complete Registration
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </>
+                )}
               </button>
 
               <p className="text-center text-[11px] text-gray-400 font-medium">Your information is secure and encrypted.</p>

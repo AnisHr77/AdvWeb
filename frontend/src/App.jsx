@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/ui/Navbar';
 import Footer from './components/ui/Footer';
 
@@ -13,6 +13,9 @@ import SubmitPaper from './pages/main/SubmitPaper';
 import TrackPaper from './pages/main/TrackPaper';
 import CertificateCheck from './pages/main/CertificateCheck';
 import About from './pages/main/About';
+
+// Admin Pages
+import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import AdminSpeakers from './pages/admin/Speakers';
 import AdminSubmissions from './pages/admin/Submissions';
@@ -36,9 +39,7 @@ const submitFooterProps = {
   ctaBg: '#0B1F3A',
   ctaTitle: 'Not Registered Yet?',
   ctaDescription: 'Authors of accepted papers must register for the conference to present their work and have it included in the official proceedings.',
-  ctaButtons: [
-    { to: '/register', label: 'Register Now', variant: 'primary', icon: 'user' },
-  ],
+  ctaButtons: [{ to: '/register', label: 'Register Now', variant: 'primary', icon: 'user' }],
 };
 
 const trackFooterProps = {
@@ -49,6 +50,13 @@ const trackFooterProps = {
     { to: '/submit-paper', label: 'Submit Another Paper', variant: 'primary' },
     { to: '/register', label: 'Register Now', variant: 'outline' },
   ],
+};
+
+// Protected Route Wrapper
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('admin_token');
+  if (!token) return <Navigate to="/admin/login" replace />;
+  return children;
 };
 
 function Layout() {
@@ -73,16 +81,13 @@ function Layout() {
           <Route path="/submit-paper" element={<SubmitPaper />} />
           <Route path="/track-paper" element={<TrackPaper />} />
           <Route path="/certificate" element={<CertificateCheck />} />
-          <Route
-            path="*"
-            element={
-              <main className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
-                <h1 className="text-6xl font-bold text-indigo-600">404</h1>
-                <p className="text-gray-500 mt-3 text-lg">Page not found.</p>
-                <a href="/" className="mt-6 text-indigo-600 hover:underline">← Go Home</a>
-              </main>
-            }
-          />
+          <Route path="*" element={
+            <main className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
+              <h1 className="text-6xl font-bold text-indigo-600">404</h1>
+              <p className="text-gray-500 mt-3 text-lg">Page not found.</p>
+              <a href="/" className="mt-6 text-indigo-600 hover:underline">← Go Home</a>
+            </main>
+          }/>
         </Routes>
       </div>
       <Footer {...footerProps} />
@@ -94,16 +99,18 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ── Admin Routes (no global nav/footer) ── */}
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/speakers" element={<AdminSpeakers />} />
-        <Route path="/admin/submissions" element={<AdminSubmissions />} />
-        <Route path="/admin/agenda" element={<Agenda />} />
-        <Route path="/admin/registrations" element={<Registrations />} />
-        <Route path="/admin/certificates" element={<Certificates />} />
-        <Route path="/admin/settings" element={<Settings />} />
+        {/* ── Admin Routes ── */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin/speakers" element={<ProtectedRoute><AdminSpeakers /></ProtectedRoute>} />
+        <Route path="/admin/submissions" element={<ProtectedRoute><AdminSubmissions /></ProtectedRoute>} />
+        <Route path="/admin/agenda" element={<ProtectedRoute><Agenda /></ProtectedRoute>} />
+        <Route path="/admin/registrations" element={<ProtectedRoute><Registrations /></ProtectedRoute>} />
+        <Route path="/admin/certificates" element={<ProtectedRoute><Certificates /></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/admin/logout" element={<Logout />} />
-        {/* ── Public Routes (wrapped in Layout) ── */}
+        
+        {/* ── Public Routes ── */}
         <Route path="/*" element={<Layout />} />
       </Routes>
     </BrowserRouter>

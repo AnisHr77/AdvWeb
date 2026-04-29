@@ -47,7 +47,7 @@ const AdminLayout = ({ children }) => {
           <div className="w-9 h-9 bg-[#17A2B8] rounded-md flex items-center justify-center text-white">
             <IconLogo />
           </div>
-          <span className="text-white font-bold text-lg tracking-tight">ISC Admin</span>
+          <span className="text-white font-semibold text-lg tracking-tight">ISC Admin</span>
         </div>
 
         {/* Nav */}
@@ -56,14 +56,14 @@ const AdminLayout = ({ children }) => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all relative ${
+              className={`flex items-center gap-3 px-5 py-4 rounded-md text-base font-medium transition-all relative ${
                 isActive(item.path)
-                  ? 'bg-[#0E5161]/40 text-white shadow-sm'
+                  ? 'bg-accent-cyan/10 text-accent-cyan'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {isActive(item.path) && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#17A2B8] rounded-r-full" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-7 bg-accent-cyan rounded-r-full" />
               )}
               <span className={isActive(item.path) ? 'text-white' : 'text-white/40'}>{item.icon}</span>
               {item.label}
@@ -93,7 +93,7 @@ const AdminLayout = ({ children }) => {
             <input
               value={search} onChange={(e) => setSearch(e.target.value)}
               placeholder="Search speakers, submissions..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs border border-transparent bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-200 transition-all placeholder-gray-400 font-medium"
+              className="w-full pl-12 pr-4 py-3 text-sm border border-transparent bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-cyan/10 transition-all placeholder-gray-400 font-medium"
             />
           </div>
           <div className="flex items-center gap-5">
@@ -103,10 +103,10 @@ const AdminLayout = ({ children }) => {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-slate-400 rounded-full ring-2 ring-white text-[0px]"/>
             </button>
             {/* User */}
-            <button className="flex items-center gap-2.5 hover:bg-gray-50 px-3 py-2 rounded-md transition-all">
-              <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">A</div>
-              <span className="text-sm font-semibold text-slate-800">Admin User</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            <button className="flex items-center gap-3 hover:bg-gray-50 px-4 py-2.5 rounded-md transition-all">
+              <div className="w-9 h-9 rounded-full bg-accent-cyan text-white flex items-center justify-center font-bold text-base">A</div>
+              <span className="text-base font-semibold text-slate-800">Admin User</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
           </div>
         </header>

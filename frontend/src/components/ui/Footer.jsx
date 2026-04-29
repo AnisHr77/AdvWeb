@@ -15,15 +15,19 @@ const Footer = ({
   ctaButtons = null,
   showCTA = true
 }) => {
+  const isRegistered = !!localStorage.getItem('conference_user');
+
   const defaultButtons = (
     <>
-      <Link
-        to="/register"
-        className="px-8 py-3.5 rounded-sm font-bold transition-all shadow-lg hover:shadow-xl active:scale-95"
-        style={{ backgroundColor: '#17A2B8' }}
-      >
-        Register Now
-      </Link>
+      {!isRegistered && (
+        <Link
+          to="/register"
+          className="px-8 py-3.5 rounded-sm font-bold transition-all shadow-lg hover:shadow-xl active:scale-95"
+          style={{ backgroundColor: '#17A2B8' }}
+        >
+          Register Now
+        </Link>
+      )}
       <Link
         to="/submit-paper"
         className="px-8 py-3.5 rounded-sm font-bold border border-white/30 transition-all hover:bg-white/10 active:scale-95"
@@ -33,8 +37,10 @@ const Footer = ({
     </>
   );
 
-  const renderButtons = ctaButtons
-    ? ctaButtons.map((btn) => (
+  const filteredCtaButtons = ctaButtons ? ctaButtons.filter(btn => !(isRegistered && btn.to === '/register')) : null;
+
+  const renderButtons = filteredCtaButtons
+    ? filteredCtaButtons.map((btn) => (
         <Link
           key={btn.to}
           to={btn.to}
@@ -115,7 +121,7 @@ const Footer = ({
             <div>
               <h4 className="text-white font-bold mb-8 text-md">Participants</h4>
               <ul className="space-y-4 text-[14px]">
-                <li><Link to="/register" className="hover:text-white transition-colors">Register</Link></li>
+                {!isRegistered && <li><Link to="/register" className="hover:text-white transition-colors">Register</Link></li>}
                 <li><Link to="/submit-paper" className="hover:text-white transition-colors">Submit Paper</Link></li>
                 <li><Link to="/guidelines" className="hover:text-white transition-colors">Author Guidelines</Link></li>
                 <li><Link to="/dates" className="hover:text-white transition-colors">Important Dates</Link></li>

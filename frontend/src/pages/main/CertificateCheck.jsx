@@ -1,48 +1,49 @@
 import { useState } from 'react';
-
-const mockCertificates = {
-  'CERT-2025-001': { name: 'Dr. Alice Martin', type: 'Speaker', event: 'AdvWeb 2025' },
-  'CERT-2025-042': { name: 'Mohamed Yacine', type: 'Attendee', event: 'AdvWeb 2025' },
-  'CERT-2025-100': { name: 'Prof. Karim Benali', type: 'Best Paper Award', event: 'AdvWeb 2025' },
-};
+import { certificateAPI } from '../../services/api';
 
 const CertificateCheck = () => {
-  const [certId, setCertId] = useState('');
-  const [result, setResult] = useState(null);
+  const [certId,   setCertId]   = useState('');
+  const [result,   setResult]   = useState(null);
   const [searched, setSearched] = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
 
-  const handleCheck = (e) => {
+  const handleCheck = async (e) => {
     e.preventDefault();
-    setSearched(true);
-    setResult(mockCertificates[certId.toUpperCase()] || null);
+    setSearched(false);
+    setResult(null);
+    setError('');
+    setLoading(true);
+    try {
+      const data = await certificateAPI.verify(certId);
+      setResult(data);
+      setSearched(true);
+    } catch (err) {
+      setSearched(true);
+      setError(err.message || 'Certificate not found.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <main className="max-w-lg mx-auto px-6 py-16">
       <h1 className="text-4xl font-bold text-gray-900 mb-3">Certificate Check</h1>
-      <p className="text-gray-500 mb-8">
-        Verify the authenticity of an AdvWeb 2025 certificate by entering its ID.
-      </p>
+      <p className="text-gray-500 mb-8">Verify the authenticity of an ISC 2026 certificate by entering its ID.</p>
+
       <form onSubmit={handleCheck} className="flex gap-3">
-        <input
-          type="text"
-          placeholder="e.g. CERT-2025-001"
-          value={certId}
-          onChange={(e) => setCertId(e.target.value)}
-          required
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
-        <button
-          type="submit"
-          className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition"
-        >
-          Verify
+        <input type="text" placeholder="e.g. ISC-ATT-2026-001"
+          value={certId} onChange={e => setCertId(e.target.value)} required
+          className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#17A2B8]/40" />
+        <button type="submit" disabled={loading}
+          className="bg-[#17A2B8] text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-[#138496] transition disabled:opacity-70">
+          {loading ? 'Checking…' : 'Verify'}
         </button>
       </form>
 
       {searched && (
         <div className="mt-8">
-          {result ? (
+          {result && !error ? (
             <div className="border border-green-300 bg-green-50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-2xl">✅</span>

@@ -14,13 +14,13 @@ const SpeakerCard = ({
   const isDetailed = variant === 'detailed';
 
   return (
-    <div className="bg-white rounded-md overflow-hidden shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col h-full">
+    <div className="bg-white rounded-md overflow-hidden border border-slate-100 hover:border-accent-cyan transition-all flex flex-col h-full group">
       {/* Speaker Image */}
       <div className="aspect-[4/3] w-full relative">
         <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
       </div>
 
@@ -34,7 +34,7 @@ const SpeakerCard = ({
               </span>
             )}
             {country && (
-              <span className="px-2.5 py-1 rounded-md text-xs font-semibold text-gray-500 bg-white border border-black/5 flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+              <span className="px-2.5 py-1 rounded-md text-xs font-semibold text-gray-500 bg-white border border-slate-100 flex items-center gap-1.5 whitespace-nowrap">
                 <IconPin size={12} className="opacity-60" />
                 {country}
               </span>
@@ -42,7 +42,7 @@ const SpeakerCard = ({
           </div>
         )}
 
-        <h3 className="text-xl font-bold text-[#0B1F3A] mb-1">
+        <h3 className="text-xl font-semibold text-[#0B1F3A] mb-1">
           {name}
         </h3>
 
@@ -65,7 +65,7 @@ const SpeakerCard = ({
               {bio}
             </p>
             <div className="mt-auto">
-              <button className="w-full py-2.5 px-4 rounded-sm cursor-pointer border border-black/10 text-sm font-bold text-[#0B1F3A] hover:bg-gray-50 transition-colors">
+              <button className="w-full py-2.5 px-4 rounded-md cursor-pointer border border-slate-200 text-xs font-semibold uppercase tracking-widest text-slate-700 hover:bg-slate-50 transition-colors">
                 View Profile
               </button>
             </div>
